@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Start Frontend",
+            "runtimeExecutable": "http-server",
+            "args": ["-p", "3000", "-o", "-c-1", "frontend/build"],
+            "runtimeArgs": ["-r", "http://localhost:3000"],
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "disableOptimisticBPs": true,
+            "env": {},
+            "sourceMaps": false,
+            "outFiles": [],
+            "stopOnEntry": false
+        }
+    ]
+}

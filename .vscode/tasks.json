@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Frontend",
+      "type": "shell",
+      "command": "npm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      }
+    },
+    {
+      "label": "Build Backend",
+      "type": "shell",
+      "command": "npm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
+    },
+    /*{
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "http-server -o -c-1 -p 3000",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/frontend/build"
+      }
+    },*/
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "npm start",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
+    }
+  ]
+}
