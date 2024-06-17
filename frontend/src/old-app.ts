@@ -51,6 +51,8 @@ function renderCanvas(pixels: { id: number; color: string; }[]): void {
     }
 }*/
 
+export {};
+
 // Initial fetch to display the canvas
 fetchCanvas();
 
