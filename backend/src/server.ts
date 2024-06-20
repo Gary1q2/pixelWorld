@@ -1,9 +1,10 @@
-import express from "express";
+import express, { json } from "express";
 import mysql from "mysql2/promise";
-import path from 'path';
+import path from "path";
+import cors from "cors";
 
 // Configuration
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 6969;
 const DB_CONFIG = {
     host: "localhost",
     user: "root", 
@@ -13,6 +14,9 @@ const DB_CONFIG = {
 
 
 const app = express();
+
+app.use(cors());
+app.use(express.json()); // Middleware to parse JSON bodies
 
 console.log("dirname = " + __dirname);
 app.use(express.static(path.join(__dirname, "..")));
@@ -30,10 +34,16 @@ app.get("/pixels", async (req, res) => {
 app.post("/pixel", async (req, res) => {
     const pixelData = req.body;
     const db = await mysql.createConnection(DB_CONFIG);
-    const lol = await db.query(`UPDATE pixels SET colour = ${pixelData.colour} WHERE x = ${pixelData.x} AND y = ${pixelData.colour}`);
+    console.log(pixelData);
 
-    const [result] = await db.query("SELECT * FROM pixels"); 
-    res.json(result);
+    try {
+        const query = await db.query(`UPDATE pixels SET colour = "${pixelData.colour}" WHERE id = ${pixelData.id}`);
+        console.log(`set pixel ${pixelData.id} to colour ${pixelData.colour}`)
+        res.json(true);
+    } catch  (error) {
+        console.error("Error setting pixel in database", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 
