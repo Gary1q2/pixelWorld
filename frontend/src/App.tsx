@@ -13,6 +13,7 @@ interface Pixel {
 }
 
 function App() {
+    const [selectedColour, setSelectedColour] = useState('#000000'); // Default color
     const [pixels, setPixels] = useState<Pixel[]>([]);
 
     async function fetchData() {
@@ -25,14 +26,14 @@ function App() {
 
     async function handleClick(pixelID: number) {
         console.log("clicked on pixel " + pixelID);
-        var pixelColour = pixels[pixelID-1].colour;
+        /*var pixelColour = pixels[pixelID-1].colour;
         var newColour:string;
         if (pixelColour == "#FFFFFF") {
             newColour = "#000000";
         } else {
             newColour = "#FFFFFF";
-        }
-        var res = await setPixelColour(pixelID, newColour);
+        }*/
+        var res = await setPixelColour(pixelID, selectedColour);
         console.log(res);
 
         if (res.status == 200) {
@@ -40,7 +41,7 @@ function App() {
 
             const updatedPixels = pixels.map(pixel => {
                 if (pixelID == pixel.id) {
-                    return { ...pixel, colour: newColour };
+                    return { ...pixel, colour: selectedColour };
                 }
                 return pixel;
             });
@@ -49,8 +50,17 @@ function App() {
         }
     }
 
+    const handleColorChange = (colour: string) => {
+        setSelectedColour(colour);
+    };
+
+
     useEffect(() => {
-        fetchData();
+        fetchData(); // Initial fetch
+
+        const intervalId = setInterval(fetchData, 1000);
+
+        return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {
@@ -62,6 +72,8 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1>Pixel Canvas</h1>
+
+
                 <div>
                     {pixels.map(pixel => (
                         <div
@@ -71,6 +83,14 @@ function App() {
                             onClick={() => handleClick(pixel.id)}
                         />
                     ))}
+                </div>
+
+                <div className="colour-panel">
+                    <h2>Color Panel</h2>
+                    <button className="colourSelection" onClick={() => handleColorChange('#FF0000')} style={{ backgroundColor: '#FF0000' }}></button>
+                    <button className="colourSelection" onClick={() => handleColorChange('#00FF00')} style={{ backgroundColor: '#00FF00' }}></button>
+                    <button className="colourSelection" onClick={() => handleColorChange('#0000FF')} style={{ backgroundColor: '#0000FF' }}></button>
+                    {/* Add more color buttons as needed */}
                 </div>
             </header>
         </div>
