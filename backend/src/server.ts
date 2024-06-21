@@ -1,48 +1,78 @@
 import express, { json } from "express";
-import mysql from "mysql2/promise";
+import { connectToDB } from "./db";
 import path from "path";
 import cors from "cors";
 
 // Configuration
 const PORT = process.env.PORT || 6969;
-const DB_CONFIG = {
-    host: "localhost",
-    user: "root", 
-    password: "pokerisfun12",
-    database: "pixel_world"
-};
 
 
+const pool = connectToDB();
 const app = express();
 
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
-
-console.log("dirname = " + __dirname);
 app.use(express.static(path.join(__dirname, "..")));
+
+
+
 
 app.get("/canvas", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "index.html"));
 });
 
+/**
+ * GET API /pixels
+ * Return array of pixel data
+ */
 app.get("/pixels", async (req, res) => {
-    const db = await mysql.createConnection(DB_CONFIG);
-    const [value] = await db.query("SELECT * FROM pixels");
-    res.json(value);
+
+    try {
+        const conn = await pool.getConnection();
+        try {
+            const [value] = await conn.query("SELECT * FROM pixels");
+            res.json(value);
+
+        } catch (queryError) {
+            console.log("Error querying database: ", queryError);
+            res.status(500).json({ error: "Failed to grab pixel data" });
+
+        } finally {
+            conn.release();
+        }
+
+    } catch (connError) {
+        console.log("Error connecting to database: ", connError);
+        res.status(500).json({ error: "Failed to connect to database" });
+    }
 });
 
+/**
+ * POST API /pixel
+ * Sets the colour of an individual pixel
+ */
 app.post("/pixel", async (req, res) => {
     const pixelData = req.body;
-    const db = await mysql.createConnection(DB_CONFIG);
     console.log(pixelData);
 
     try {
-        const query = await db.query(`UPDATE pixels SET colour = "${pixelData.colour}" WHERE id = ${pixelData.id}`);
-        console.log(`set pixel ${pixelData.id} to colour ${pixelData.colour}`)
-        res.json(true);
-    } catch  (error) {
-        console.error("Error setting pixel in database", error);
-        res.status(500).json({ error: "Internal server error" });
+        const conn = await pool.getConnection();
+        try {
+            await conn.query(`UPDATE pixels SET colour = "${pixelData.colour}" WHERE id = ${pixelData.id}`);
+            console.log(`Set pixel ${pixelData.id} to colour ${pixelData.colour}`)
+            res.json(true);
+
+        } catch (queryError) {
+            console.error("Error setting pixel in database: ", queryError);
+            res.status(500).json({ error: "Failed to set pixel" });
+
+        } finally {
+            conn.release();
+        }
+
+    } catch (connError) {
+        console.log("Error connecting to database: ", connError);
+        res.status(500).json({ error: "Failed to connect to database" });
     }
 });
 

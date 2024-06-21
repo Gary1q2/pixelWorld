@@ -6,8 +6,6 @@ import './App.css';
 
 interface Pixel {
     id: number;
-    x: number;
-    y: number;
     wtf: number;
     colour: string;
 }
@@ -87,6 +85,8 @@ function App() {
 
                 <div className="colour-panel">
                     <h2>Color Panel</h2>
+                    <button className="colourSelection" onClick={() => handleColorChange('#000000')} style={{ backgroundColor: '#000000' }}></button>
+                    <button className="colourSelection" onClick={() => handleColorChange('#FFFFFF')} style={{ backgroundColor: '#FFFFFF' }}></button>
                     <button className="colourSelection" onClick={() => handleColorChange('#FF0000')} style={{ backgroundColor: '#FF0000' }}></button>
                     <button className="colourSelection" onClick={() => handleColorChange('#00FF00')} style={{ backgroundColor: '#00FF00' }}></button>
                     <button className="colourSelection" onClick={() => handleColorChange('#0000FF')} style={{ backgroundColor: '#0000FF' }}></button>
