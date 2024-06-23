@@ -6,7 +6,7 @@ export function connectToDB() {
         const pool = mysql.createPool({
             host: "localhost",
             user: "root", 
-            password: "pokerisfun12",
+            password: "",
             database: "pixel_world",
             waitForConnections: true,
             connectionLimit: 10,

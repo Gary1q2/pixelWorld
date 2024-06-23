@@ -5,7 +5,7 @@ export async function runScript() {
     const conn = await mysql.createConnection({
         host: "localhost",
         user: "root", 
-        password: "pokerisfun12",
+        password: "",
         database: "pixel_world",
     });
 
@@ -14,13 +14,13 @@ export async function runScript() {
         
         await conn.beginTransaction();
 
-        const sql = 'INSERT INTO pixels (x, y, colour) VALUES ?';
+        const sql = 'INSERT INTO pixels (colour) VALUES ?';
         let values = [];
         
         // 100 x 100
         for (let y = 1; y <= 10; y++) {
             for (let x = 1; x <= 10; x++) {
-                values.push([x, y, "#FFFFFF"]);
+                values.push(["#FFFFFF"]);
             }
         }
         console.log(values);
