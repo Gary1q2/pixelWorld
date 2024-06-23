@@ -1,14 +1,9 @@
 import mysql from "mysql2/promise";
+import { config } from "./config";
 
 export async function runScript() {
 
-    const conn = await mysql.createConnection({
-        host: "localhost",
-        user: "root", 
-        password: "",
-        database: "pixel_world",
-    });
-
+    const conn = await mysql.createConnection(config.mysql);
     try {
         conn.connect();
         
@@ -18,8 +13,8 @@ export async function runScript() {
         let values = [];
         
         // 100 x 100
-        for (let y = 1; y <= 10; y++) {
-            for (let x = 1; x <= 10; x++) {
+        for (let y = 1; y <= 100; y++) {
+            for (let x = 1; x <= 100; x++) {
                 values.push(["#FFFFFF"]);
             }
         }
@@ -32,7 +27,7 @@ export async function runScript() {
         console.error("Error connecting to database: " + conError);
 
     } finally {
-        //if (conn) await conn.end();
+        if (conn) await conn.end();
     }
 }
 

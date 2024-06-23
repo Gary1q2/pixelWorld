@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Counter from "./Counter";
+import { useEffect, useState } from 'react';
 import { fetchCanvas, setPixelColour } from "./apiService";
-import logo from './logo.svg';
 import './App.css';
 
 interface Pixel {
     id: number;
-    wtf: number;
     colour: string;
 }
 
@@ -16,29 +13,18 @@ function App() {
     const [loading, setLoading] = useState(true);
 
     async function fetchData() {
-        console.log("pixelData = " + pixels);
         const data = await fetchCanvas();
+        console.log("Pixel data: ");
+        console.log(data);
         setPixels(data);
         setLoading(false);
-        console.log("data = ");
-        console.log(data);
     }
 
-    async function handleClick(pixelID:any) {//: number) {
-        //console.log(pixels);
-        console.log("clicked on pixel " + pixelID);
-        /*var pixelColour = pixels[pixelID-1].colour;
-        var newColour:string;
-        if (pixelColour == "#FFFFFF") {
-            newColour = "#000000";
-        } else {
-            newColour = "#FFFFFF";
-        }*/
-        var res = await setPixelColour(pixelID, selectedColour);
-        console.log(res);
+    async function handleClick(pixelID:any) {
+        console.log("Click on pixel " + pixelID);
 
+        var res = await setPixelColour(pixelID, selectedColour);
         if (res.status == 200) {
-            // set colour of pixel to that colour..
 
             const updatedPixels = pixels.map(pixel => {
                 if (pixelID == pixel.id) {
@@ -52,10 +38,6 @@ function App() {
     }
 
     const handleColorChange = (id: string, colour: any ) => {
-        // set all things of value to this        
-
-        console.log("buttom of id pressed " + id);
-
         var ele = document.querySelector(".colourOptionSelected");
         console.log(ele);
         if (ele) ele.className = "colourOption";
@@ -70,13 +52,15 @@ function App() {
 
         if (loading) return <p>Loading...</p>
 
-        return Array.from({ length: 10 }, (_, row) => (
+        let totalPixels = 100;
+
+        return Array.from({ length: totalPixels }, (_, row) => (
             <div style={{display: "flex", flexWrap: "nowrap"}}>
-                {pixels.slice(row * 10, row * 10 + 10).map((_, col) => (
+                {pixels.slice(row * totalPixels, row * totalPixels + totalPixels).map((_, col) => (
                     <div
                         className="square"
-                        style={{ backgroundColor: pixels[row * 10 + col].colour}}
-                        onClick={() => handleClick(row * 10 + col + 1)}
+                        style={{ backgroundColor: pixels[row * totalPixels + col].colour}}
+                        onClick={() => handleClick(row * totalPixels + col + 1)}
                     />
                 ))}
             </div>  
@@ -86,16 +70,10 @@ function App() {
 
     useEffect(() => {
         fetchData(); // Initial fetch
+        const intervalId = setInterval(fetchData, 5000);
 
-        //const intervalId = setInterval(fetchData, 1000);
-
-        //return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, []);
-
-    useEffect(() => {
-        //console.log("pixels = ");
-        //console.log(pixels);
-    }, [pixels]);
 
     return (
         <div className="App">
@@ -113,8 +91,6 @@ function App() {
                 <h3>Select a colour above and select pixels below to change the colour!</h3>
                 <h3>Online pixel board</h3>
                 <div id="pixel-canvas">{renderPixelCanvas()}</div>
-
-                
             </header>
         </div>
     );

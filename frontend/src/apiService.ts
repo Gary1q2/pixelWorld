@@ -3,7 +3,6 @@ const API_URL = "http://localhost:6969";
 // Fetch the current state of the canvas and display it
 export async function fetchCanvas() {
     try {
-        console.log("fetching");
         const response = await fetch(`${API_URL}/pixels`);
         return response.json();
     } catch (error) {
