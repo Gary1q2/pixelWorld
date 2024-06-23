@@ -100,10 +100,6 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Pixel Canvas</h1>
-
-                <div id="pixel-canvas">{renderPixelCanvas()}</div>
-
                 <div className="colour-panel">
                     <h2>Color Panel</h2>
                     <button id="colourOption1" className="colourOption" onClick={() => handleColorChange("colourOption1", "#000000")} style={{ backgroundColor: '#000000' }}></button>
@@ -113,6 +109,12 @@ function App() {
                     <button id="colourOption5" className="colourOption" onClick={() => handleColorChange("colourOption5", '#0000FF')} style={{ backgroundColor: '#0000FF' }}></button>
                     {/* Add more color buttons as needed */}
                 </div>
+
+                <h3>Select a colour above and select pixels below to change the colour!</h3>
+                <h3>Online pixel board</h3>
+                <div id="pixel-canvas">{renderPixelCanvas()}</div>
+
+                
             </header>
         </div>
     );
