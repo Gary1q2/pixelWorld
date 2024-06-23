@@ -13,16 +13,19 @@ interface Pixel {
 function App() {
     const [selectedColour, setSelectedColour] = useState('#000000'); // Default color
     const [pixels, setPixels] = useState<Pixel[]>([]);
+    const [loading, setLoading] = useState(true);
 
     async function fetchData() {
         console.log("pixelData = " + pixels);
         const data = await fetchCanvas();
         setPixels(data);
+        setLoading(false);
         console.log("data = ");
         console.log(data);
     }
 
-    async function handleClick(pixelID: number) {
+    async function handleClick(pixelID:any) {//: number) {
+        //console.log(pixels);
         console.log("clicked on pixel " + pixelID);
         /*var pixelColour = pixels[pixelID-1].colour;
         var newColour:string;
@@ -52,18 +55,57 @@ function App() {
         setSelectedColour(colour);
     };
 
+    const renderPixelCanvas = () => {
+
+        if (loading) return <p>Loading...</p>
+
+        let pixelGrid = [];
+
+        var index = 0;
+
+        //console.log(pixels);
+
+
+
+        for (let row = 0; row < 10; row++) {
+            let pixelRow = [];
+            for (let col = 0; col < 10; col++) {
+                const handleClickWithId = (id: number) => {
+                    handleClick(id);
+                }
+
+                pixelRow.push(
+                    <div
+                        className="square"
+                        style={{ backgroundColor: pixels[index].colour }}
+                        onClick={() => handleClickWithId(index)}
+                    />
+                );
+                //console.log("pixelId = " + pixels[index].id);
+                if (index <= 98) index++;
+            }
+
+            pixelGrid.push(
+                <div className="pixelRow">
+                    { pixelRow }
+                </div>
+            );
+        }
+        return pixelGrid;
+    }
+
 
     useEffect(() => {
         fetchData(); // Initial fetch
 
-        const intervalId = setInterval(fetchData, 1000);
+        //const intervalId = setInterval(fetchData, 1000);
 
-        return () => clearInterval(intervalId);
+        //return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {
-        console.log("pixels = ");
-        console.log(pixels);
+        //console.log("pixels = ");
+        //console.log(pixels);
     }, [pixels]);
 
     return (
@@ -71,17 +113,8 @@ function App() {
             <header className="App-header">
                 <h1>Pixel Canvas</h1>
 
+                <div id="pixel-canvas">{ renderPixelCanvas() }</div>
 
-                <div>
-                    {pixels.map(pixel => (
-                        <div
-                            key={pixel.id}
-                            className="square"
-                            style={{ backgroundColor: pixel.colour }}
-                            onClick={() => handleClick(pixel.id)}
-                        />
-                    ))}
-                </div>
 
                 <div className="colour-panel">
                     <h2>Color Panel</h2>
