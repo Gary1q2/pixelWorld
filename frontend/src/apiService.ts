@@ -1,31 +1,42 @@
-const API_URL = "http://localhost:6969";
+import { CONFIG } from "./config";
+import { validatePixelData } from "./validate";
 
-// Fetch the current state of the canvas and display it
+/**
+ * Call get API to fetch current state of canvas
+ */
 export async function fetchCanvas() {
     try {
-        const response = await fetch(`${API_URL}/pixels`);
+        const response = await fetch(`${CONFIG.API_URL}/pixels`);
         return response.json();
     } catch (error) {
         console.error('Error fetching canvas:', error);
     }
 }
 
-// Set the color of a pixel
+/**
+ * Call post API to set colour of pixel
+ * @param id 
+ * @param colour 
+ */
 export async function setPixelColour(id: number, colour: string) {
-    //const color = prompt('Enter a color (e.g., red, #00ff00, etc.):');
-    console.log("id = " + id);
-    console.log("colour = " + colour);
 
-    const response = await fetch(`${API_URL}/pixel`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: id,
-            colour: colour
-        })
-    });
+    if (!validatePixelData(id, colour)) return false;
 
-    return response;
+    try {
+        await fetch(`${CONFIG.API_URL}/pixel`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+                colour: colour
+            })
+        });
+        return true;
+
+    } catch (error) {
+        console.error("Error setting pixel on canvas:", error);
+        return false;
+    }
 }

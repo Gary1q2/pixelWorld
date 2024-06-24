@@ -1,4 +1,4 @@
-import { config } from "./config";
+import { CONFIG } from "./config";
 
 /**
  * Validates POST request pixel data
@@ -11,8 +11,8 @@ export function validatePixelData(id: number, colour: string) {
         console.error("Pixel ID is not a number: ", id);
         return false;
     }
-    if (!(id >= 1 && id <= config.totalPixels)) {
-        console.error(`Pixel ID is not a valid number between 1 and ${config.totalPixels}: `, id);
+    if (!(id >= 1 && id <= CONFIG.totalPixels)) {
+        console.error(`Pixel ID is not a valid number between 1 and ${CONFIG.totalPixels}: `, id);
         return false;
     }
 

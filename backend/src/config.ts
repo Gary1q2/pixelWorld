@@ -12,5 +12,4 @@ export const config = {
         connectionLimit: 10,
         queueLimit: 0
     }
-
 }

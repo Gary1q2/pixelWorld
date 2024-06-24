@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { fetchCanvas, setPixelColour } from "./apiService";
-import './App.css';
+import { CONFIG } from "./config";
+import "./App.css";
 
 interface Pixel {
     id: number;
@@ -8,9 +9,26 @@ interface Pixel {
 }
 
 function App() {
-    const [selectedColour, setSelectedColour] = useState('#000000'); // Default color
+    const [selectedColour, setSelectedColour] = useState("#000000");
     const [pixels, setPixels] = useState<Pixel[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const popSound = new Audio("pop.mp3");
+
+    var coloursToUse:string[] = [
+        "#FF0000", 
+        "#FF8000",
+        "#FFFF00",
+        "#00FF00",
+        "#00FFFF",
+        "#0000FF",
+        "#7F00FF",
+        "#FF00FF",
+        "#FF007F",
+        "#808080",
+        "#000000", 
+        "#FFFFFF", 
+    ];
 
     async function fetchData() {
         const data = await fetchCanvas();
@@ -21,23 +39,38 @@ function App() {
     }
 
     async function handleClick(pixelID:any) {
+
+        for (var i = -5; i < 5; i++) {
+            console.log(`pixel id ${pixelID+i} is of colour ${pixels[pixelID+i].colour}`)
+        }
+
         console.log("Click on pixel " + pixelID);
 
-        var res = await setPixelColour(pixelID, selectedColour);
-        if (res.status == 200) {
+        console.log("current colour = ", pixels[pixelID].colour);
+        console.log("setting to colour = ", selectedColour);
 
+        if (pixels[pixelID].colour != selectedColour) {
+            popSound.play();
+        }
+
+        var res = await setPixelColour(pixelID, selectedColour);
+        if (res) {
+            
             const updatedPixels = pixels.map(pixel => {
                 if (pixelID == pixel.id) {
-                    return { ...pixel, colour: selectedColour };
+                    return { id: pixel.id, colour: selectedColour };
+                } else {
+                    return pixel;
                 }
-                return pixel;
             });
 
+
+            console.log("set pixels");
             setPixels(updatedPixels);
         }
     }
 
-    const handleColorChange = (id: string, colour: any ) => {
+    const handleColorChange = (id: string, colour: string) => {
         var ele = document.querySelector(".colourOptionSelected");
         console.log(ele);
         if (ele) ele.className = "colourOption";
@@ -49,47 +82,45 @@ function App() {
     };
 
     const renderPixelCanvas = () => {
-
         if (loading) return <p>Loading...</p>
+        
+        let len = Math.sqrt(CONFIG.totalPixels);
 
-        let totalPixels = 100;
-
-        return Array.from({ length: totalPixels }, (_, row) => (
+        return Array.from({ length: len }, (_, row) => (
             <div style={{display: "flex", flexWrap: "nowrap"}}>
-                {pixels.slice(row * totalPixels, row * totalPixels + totalPixels).map((_, col) => (
+                {pixels.slice(row * len, row * len + len).map((_, col) => (
                     <div
                         className="square"
-                        style={{ backgroundColor: pixels[row * totalPixels + col].colour}}
-                        onClick={() => handleClick(row * totalPixels + col + 1)}
+                        style={{ backgroundColor: pixels[row * len + col].colour}}
+                        onClick={() => handleClick(row * len + col)}
                     />
                 ))}
             </div>  
         ));
     }
 
-
     useEffect(() => {
-        fetchData(); // Initial fetch
-        const intervalId = setInterval(fetchData, 5000);
+        fetchData();
 
-        return () => clearInterval(intervalId);
+        //const intervalId = setInterval(fetchData, 5000);
+
+        //return () => clearInterval(intervalId);
     }, []);
+
 
     return (
         <div className="App">
             <header className="App-header">
-                <div className="colour-panel">
-                    <h2>Color Panel</h2>
-                    <button id="colourOption1" className="colourOption" onClick={() => handleColorChange("colourOption1", "#000000")} style={{ backgroundColor: '#000000' }}></button>
-                    <button id="colourOption2" className="colourOption" onClick={() => handleColorChange("colourOption2", '#FFFFFF')} style={{ backgroundColor: '#FFFFFF' }}></button>
-                    <button id="colourOption3" className="colourOption" onClick={() => handleColorChange("colourOption3", '#FF0000')} style={{ backgroundColor: '#FF0000' }}></button>
-                    <button id="colourOption4" className="colourOption" onClick={() => handleColorChange("colourOption4", '#00FF00')} style={{ backgroundColor: '#00FF00' }}></button>
-                    <button id="colourOption5" className="colourOption" onClick={() => handleColorChange("colourOption5", '#0000FF')} style={{ backgroundColor: '#0000FF' }}></button>
-                    {/* Add more color buttons as needed */}
+                <h1>Online Pixel Canvas</h1>
+                <h3>Select a colour and click on the pixels below to change their colour!</h3>
+                <div>
+                    Users active { 0 }
                 </div>
-
-                <h3>Select a colour above and select pixels below to change the colour!</h3>
-                <h3>Online pixel board</h3>
+                <div id="colourPanel">
+                    {coloursToUse.map((item, index) => (
+                        <button id={"colourOption" + index} className="colourOption" onClick={() => handleColorChange("colourOption" + index, item)} style={{ backgroundColor: item }}></button>
+                    ))}
+                </div>  
                 <div id="pixel-canvas">{renderPixelCanvas()}</div>
             </header>
         </div>
