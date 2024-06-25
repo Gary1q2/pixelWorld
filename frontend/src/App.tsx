@@ -40,33 +40,19 @@ function App() {
 
     async function handleClick(pixelID:any) {
 
-        for (var i = -5; i < 5; i++) {
-            console.log(`pixel id ${pixelID+i} is of colour ${pixels[pixelID+i].colour}`)
-        }
-
-        console.log("Click on pixel " + pixelID);
-
-        console.log("current colour = ", pixels[pixelID].colour);
-        console.log("setting to colour = ", selectedColour);
-
-        if (pixels[pixelID].colour != selectedColour) {
-            popSound.play();
-        }
-
-        var res = await setPixelColour(pixelID, selectedColour);
+        const res = await setPixelColour(pixelID, selectedColour, pixels[pixelID].colour);
         if (res) {
-            
-            const updatedPixels = pixels.map(pixel => {
-                if (pixelID == pixel.id) {
-                    return { id: pixel.id, colour: selectedColour };
-                } else {
-                    return pixel;
-                }
+            res.json().then(data => {
+                popSound.play();
+                const updatedPixels = pixels.map(pixel => {
+                    if (pixelID == pixel.id) {
+                        return { id: pixel.id, colour: selectedColour };
+                    } else {
+                        return pixel;
+                    }
+                });
+                setPixels(updatedPixels);
             });
-
-
-            console.log("set pixels");
-            setPixels(updatedPixels);
         }
     }
 
@@ -102,9 +88,9 @@ function App() {
     useEffect(() => {
         fetchData();
 
-        //const intervalId = setInterval(fetchData, 5000);
+        const intervalId = setInterval(fetchData, 1000);
 
-        //return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, []);
 
 

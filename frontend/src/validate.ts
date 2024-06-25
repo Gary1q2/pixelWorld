@@ -3,9 +3,9 @@ import { CONFIG } from "./config";
 /**
  * Validates POST request pixel data
  * @param id 
- * @param colour 
+ * @param targetColour 
  */
-export function validatePixelData(id: number, colour: string) {
+export function validatePixelData(id: number, targetColour: string, currColour: string) {
     
     if (!(typeof id === "number")) {
         console.error("Pixel ID is not a number: ", id);
@@ -16,14 +16,19 @@ export function validatePixelData(id: number, colour: string) {
         return false;
     }
 
-    if (!(typeof colour === "string")) {
-        console.error(`Pixel colour is not a string: `, colour);
+    if (!(typeof targetColour === "string")) {
+        console.error(`Pixel colour is not a string: `, targetColour);
         return false;
     } 
-    if (!isHexColour(colour)) {
-        console.error(`Pixel colour is not a valid hex: `, colour);
+    if (!isHexColour(targetColour)) {
+        console.error(`Pixel colour is not a valid hex: `, targetColour);
         return false;
     } 
+
+    if (currColour == targetColour) {
+        //console.error(`Cannot set pixel to the same colour: `, targetColour);
+        return false;
+    }
 
     return true;
 }

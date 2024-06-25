@@ -18,12 +18,12 @@ export async function fetchCanvas() {
  * @param id 
  * @param colour 
  */
-export async function setPixelColour(id: number, colour: string) {
+export async function setPixelColour(id: number, colour: string, currColour: string) {
 
-    if (!validatePixelData(id, colour)) return false;
+    if (!validatePixelData(id, colour, currColour)) return false;
 
     try {
-        await fetch(`${CONFIG.API_URL}/pixel`, {
+        const res = await fetch(`${CONFIG.API_URL}/pixel`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,10 +33,10 @@ export async function setPixelColour(id: number, colour: string) {
                 colour: colour
             })
         });
-        return true;
+        return res;
 
     } catch (error) {
         console.error("Error setting pixel on canvas:", error);
-        return false;
+        return null;
     }
 }

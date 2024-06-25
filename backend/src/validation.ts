@@ -1,4 +1,5 @@
 import { config } from "./config";
+import { getCache } from "./db";
 
 /**
  * Validates POST request pixel data
@@ -7,6 +8,7 @@ import { config } from "./config";
  */
 export function validatePixelData(id: number, colour: string) {
     
+    // Make sure id is a valid number
     if (!(typeof id === "number")) {
         console.error("Pixel ID is not a number: ", id);
         return false;
@@ -16,6 +18,7 @@ export function validatePixelData(id: number, colour: string) {
         return false;
     }
 
+    // Make sure colour is a valid number
     if (!(typeof colour === "string")) {
         console.error(`Pixel colour is not a string: `, colour);
         return false;
@@ -24,6 +27,13 @@ export function validatePixelData(id: number, colour: string) {
         console.error(`Pixel colour is not a valid hex: `, colour);
         return false;
     } 
+
+    // Can't set a pixel to the same colour
+    let cache = getCache();
+    if (cache[id].colour == colour) {
+        console.error(`Cannot set pixel ${id} to the same colour ${colour}`);
+        return false;
+    }
 
     return true;
 }
