@@ -56,13 +56,13 @@ function App() {
         }
     }
 
-    const handleColorChange = (id: string, colour: string) => {
-        var ele = document.querySelector(".colourOptionSelected");
+    const handleColorChange = (colour: string) => {
+        /*var ele = document.querySelector(".colourOptionSelected");
         console.log(ele);
         if (ele) ele.className = "colourOption";
 
         ele = document.getElementById(id);
-        if (ele) ele.className = "colourOptionSelected";
+        if (ele) ele.className = "colourOptionSelected";*/
 
         setSelectedColour(colour);
     };
@@ -99,12 +99,13 @@ function App() {
             <header className="App-header">
                 <h1>Online Pixel Canvas</h1>
                 <h3>Select a colour and click on the pixels below to change their colour!</h3>
-                <div>
-                    Users active { 0 }
-                </div>
                 <div id="colourPanel">
                     {coloursToUse.map((item, index) => (
-                        <button id={"colourOption" + index} className="colourOption" onClick={() => handleColorChange("colourOption" + index, item)} style={{ backgroundColor: item }}></button>
+                        <button
+                            className={`colourOption ${selectedColour === item ? "selected" : ""}`}
+                            onClick={() => handleColorChange(item)} 
+                            style={{ backgroundColor: item }}>
+                        </button>
                     ))}
                 </div>  
                 <div id="pixel-canvas">{renderPixelCanvas()}</div>

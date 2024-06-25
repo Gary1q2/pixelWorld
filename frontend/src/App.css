@@ -38,6 +38,7 @@
   height: 25px;
   background-color: red;
   box-shadow: 0 0 0 0.5px black;
+  cursor: pointer;
 }
 
 .square:hover {
@@ -45,15 +46,29 @@
 }
 
 .colourOption {
-    width: 75px;
-    height: 75px;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    border: black 2px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, border 0.2s ease-in-out;
 }
 
-.colourOptionSelected {
-    width: 100px;
-    height: 100px;
+.colourOption.selected {
+    border: 2px solid #000;
+    transform: scale(1.2);
 }
 
-#pixel-canvas {
 
+#colourPanel {
+    position: fixed;
+    bottom: 20px; /* Adjust this value to position the panel vertically */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000; /* Ensure it appears above other elements */
+    background-color: #cfcfcf; /* Optional: Add a background color */
+    padding: 10px; /* Optional: Add some padding */
+    border-radius: 5px; /* Optional: Add some border radius */
+    border: 2px black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
 }
