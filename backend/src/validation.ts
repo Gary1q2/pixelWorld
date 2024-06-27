@@ -13,7 +13,7 @@ export function validatePixelData(id: number, colour: string) {
         console.error("Pixel ID is not a number: ", id);
         return false;
     }
-    if (!(id >= 1 && id <= config.totalPixels)) {
+    if (!(id >= 0 && id <= config.totalPixels)) {
         console.error(`Pixel ID is not a valid number between 1 and ${config.totalPixels}: `, id);
         return false;
     }

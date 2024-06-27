@@ -1,50 +1,71 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #7994cc;
+}
 .App {
-  text-align: center;
+    display: flex;
+    /*border: 2px solid red;*/
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#mainContent {
+    height: 2250px;
+    width: 2500px;
+    /*border: 2px solid green;*/
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #7994cc;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+h1, h3 {
+    text-align: center;
+    color: white;
+    /*border: 2px solid blue;*/
 }
 
 
+/* ========================================
+   Pixel canvas
+   ======================================== */
+#pixel-canvas {
+    display: inline-block;
 
+    width: 100%;
 
-
+    transform-origin: top left;
+    transition: transform 0.2s ease-out;
+    justify-content: center;
+}
+.pixelRow {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
 .square {
   display: inline-block;
-  width: 25px;
-  height: 25px;
-  background-color: red;
+  min-width: 20px;
+  min-height: 20px;
   box-shadow: 0 0 0 0.5px black;
   cursor: pointer;
+  transition: transform 0.2s ease-out;
 }
-
 .square:hover {
     transform: scale(1.25);
 }
 
+
+
+
+/* ========================================
+   Colour selection
+   ======================================== */
+#colourPanel {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background-color: #a8c1f3;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 .colourOption {
     width: 50px;
     height: 50px;
@@ -53,22 +74,8 @@
     cursor: pointer;
     transition: transform 0.2s ease-in-out, border 0.2s ease-in-out;
 }
-
 .colourOption.selected {
     border: 2px solid #000;
     transform: scale(1.2);
 }
 
-
-#colourPanel {
-    position: fixed;
-    bottom: 20px; /* Adjust this value to position the panel vertically */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000; /* Ensure it appears above other elements */
-    background-color: #cfcfcf; /* Optional: Add a background color */
-    padding: 10px; /* Optional: Add some padding */
-    border-radius: 5px; /* Optional: Add some border radius */
-    border: 2px black;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
-}

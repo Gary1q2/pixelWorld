@@ -32,14 +32,22 @@ function App() {
 
     async function fetchData() {
         const data = await fetchCanvas();
-        console.log("Pixel data: ");
-        console.log(data);
+
+        /*let data: any = [];
+        for (var i = 0; i < CONFIG.totalPixels; i++) {
+            data.push({
+                id: i,
+                colour: "#F045AB"
+            });
+        }*/
+
+
+        console.log("Grabbed new data");
         setPixels(data);
         setLoading(false);
     }
 
     async function handleClick(pixelID:any) {
-
         const res = await setPixelColour(pixelID, selectedColour, pixels[pixelID].colour);
         if (res) {
             res.json().then(data => {
@@ -56,24 +64,13 @@ function App() {
         }
     }
 
-    const handleColorChange = (colour: string) => {
-        /*var ele = document.querySelector(".colourOptionSelected");
-        console.log(ele);
-        if (ele) ele.className = "colourOption";
-
-        ele = document.getElementById(id);
-        if (ele) ele.className = "colourOptionSelected";*/
-
-        setSelectedColour(colour);
-    };
-
     const renderPixelCanvas = () => {
         if (loading) return <p>Loading...</p>
         
         let len = Math.sqrt(CONFIG.totalPixels);
 
         return Array.from({ length: len }, (_, row) => (
-            <div style={{display: "flex", flexWrap: "nowrap"}}>
+            <div className="pixelRow">
                 {pixels.slice(row * len, row * len + len).map((_, col) => (
                     <div
                         className="square"
@@ -96,20 +93,22 @@ function App() {
 
     return (
         <div className="App">
-            <header className="App-header">
+            <main id="mainContent">
                 <h1>Online Pixel Canvas</h1>
                 <h3>Select a colour and click on the pixels below to change their colour!</h3>
-                <div id="colourPanel">
+                {<div id="colourPanel">
                     {coloursToUse.map((item, index) => (
                         <button
                             className={`colourOption ${selectedColour === item ? "selected" : ""}`}
-                            onClick={() => handleColorChange(item)} 
+                            onClick={() => setSelectedColour(item)} 
                             style={{ backgroundColor: item }}>
                         </button>
                     ))}
-                </div>  
-                <div id="pixel-canvas">{renderPixelCanvas()}</div>
-            </header>
+                </div>}
+                <div id="pixel-canvas">
+                    {renderPixelCanvas()}
+                </div>
+            </main>
         </div>
     );
 }
